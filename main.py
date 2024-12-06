@@ -2,6 +2,8 @@ import pygame
 import constants as CON
 import os
 import player as p
+import asteroid as a
+import asteroidfield as af
 
 # windows env. needed so why bash calls main.py the screen shows up.
 os.environ['DISPLAY'] = ':0'
@@ -13,13 +15,18 @@ y = CON.SCREEN_HEIGHT / 2
 
 def main():
     # draw player
-    player = p.Player(x,y)    
+    player = p.Player(x,y)
+    asteroids = pygame.sprite.Group()
     # initilize
     pygame.init()
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
-
-    updatable.add(player)
+    af.AsteroidField.containers = updatable
+    asteroid_field = af.AsteroidField()
+    a.Asteroid.containers = (asteroids, updatable, drawable)
+    
+    
+    updatable.add(player, asteroid_field)
     drawable.add(player)
     # screen
     screen = pygame.display.set_mode((CON.SCREEN_WIDTH, CON.SCREEN_HEIGHT))
