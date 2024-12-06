@@ -12,14 +12,17 @@ x = CON.SCREEN_WIDTH / 2
 y = CON.SCREEN_HEIGHT / 2
 
 def main():
-    # initilize
-    pygame.init()
-
-    # screen
-    screen = pygame.display.set_mode((CON.SCREEN_WIDTH, CON.SCREEN_HEIGHT))
-
     # draw player
     player = p.Player(x,y)    
+    # initilize
+    pygame.init()
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
+    updatable.add(player)
+    drawable.add(player)
+    # screen
+    screen = pygame.display.set_mode((CON.SCREEN_WIDTH, CON.SCREEN_HEIGHT))
 
     # random banter...
     print("Starting asteroids!")
@@ -33,8 +36,10 @@ def main():
     # Main game loop
     while True:
         screen.fill("black")
-        player.draw(screen=screen)
-        player.update(dt)
+        for sprite in drawable:
+            sprite.draw(screen)
+        for sprite in updatable:
+            sprite.update(dt)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return    
