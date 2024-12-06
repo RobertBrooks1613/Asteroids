@@ -2,6 +2,7 @@ import circleshape as cs
 import constants as con
 import pygame
 import random as rd
+import score
 
 class Asteroid(cs.CircleShape):
     def __init__(self, x, y, radius):
