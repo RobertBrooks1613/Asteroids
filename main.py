@@ -3,6 +3,7 @@ import constants as CON
 import os
 import player as p
 import asteroid as a
+import bullet as b
 import asteroidfield as af
 
 # windows env. needed so why bash calls main.py the screen shows up.
@@ -17,6 +18,7 @@ def main():
     # draw player
     player = p.Player(x,y)
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
     # initilize
     pygame.init()
     updatable = pygame.sprite.Group()
@@ -24,6 +26,8 @@ def main():
     af.AsteroidField.containers = updatable
     asteroid_field = af.AsteroidField()
     a.Asteroid.containers = (asteroids, updatable, drawable)
+    b.Shot.containers = (shots, updatable, drawable)
+    
     
     
     updatable.add(player, asteroid_field)
@@ -41,15 +45,25 @@ def main():
     dt = fps_clock.tick(60) /1000
     
     # Main game loop
-    while True:
+    running = True
+    while running:
         screen.fill("black")
         for sprite in drawable:
             sprite.draw(screen)
         for sprite in updatable:
             sprite.update(dt)
+            if isinstance(sprite, a.Asteroid):
+                if sprite.collision(player):
+                    print("Game Over")
+                    running = False
+            if isinstance(sprite, b.Shot):
+                for ast in asteroids:
+                    if sprite.collision(ast):
+                        sprite.kill()
+                        ast.kill()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return    
+                running = False   
         pygame.display.flip()
         fps_clock.tick(60)
     
